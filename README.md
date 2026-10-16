@@ -1,43 +1,53 @@
-## 🚀 NoteHub Refactoring (Migrating to Next.js)
+# Homework 08: Application Optimization & Global State Management with Zustand
 
-The application has been successfully migrated from a Single Page Application
-(SPA) built with React and Vite to a modern, multi-page application utilizing
-**Next.js 16 (App Router)**. This refactoring enhances the overall user
-experience through hybrid rendering, optimized routing, and reliable state
-management.
+An optimized Next.js 15 application featuring advanced SEO configuration,
+performance enhancements via optimized fonts, and modern global state management
+using Zustand to implement automated draft saving features.
 
-### 🛠️ Key Project Implementations
+## 🚀 Key Features Implemented
 
-- **📂 Multi-Page Structure & Dynamic Routing**:
-  - `/` — Static server-rendered home page with main information about NoteHub.
-  - `/notes` — Server-side rendered (SSR) list of notes supporting search,
-    pagination, and single note creation.
-  - `/notes/[id]` — Dynamic route for displaying specific note details fetched
-    by its unique identifier.
-- **⚡ Hybrid Rendering (Server & Client Separation)**:
-  - Implemented **Server-Side Rendering (SSR)** for core route entry points to
-    support SEO and initial page performance.
-  - Integrated **Prefetching & Hydration** via TanStack Query
-    (`HydrationBoundary`), enabling instant page data availability in the
-    browser.
-  - Isolated interactive logic (state management, debounced search, modal
-    triggers) within secure `'use client'` files (`Notes.client.tsx`,
-    `NoteDetails.client.tsx`).
-- **📡 Secure Global State & API Isolation**:
-  - Created an isolated, multi-user safe **`TanStackProvider`** utilizing
-    React's `useState` hook initialization to safeguard cache partitioning.
-  - Refactored network communication to work with Axios, centralizing endpoint
-    tasks within a dedicated `lib/api.ts` module.
-  - Migrated build-time parameters from Vite-specific structures to standard
-    environment variables using the `NEXT_PUBLIC_` runtime injection prefix.
-- **🛡️ Robust Error Boundaries & Structural States**:
-  - Introduced a global `app/loading.tsx` layout layer to handle non-blocking
-    asynchronous UI transitions.
-  - Implemented localized, client-interactive `error.tsx` boundary handlers to
-    elegantly recover from component-level network and parsing failures without
-    compromising core application runtime.
-- **🎨 Code Hygiene & Styling**:
-  - Structured clean component design isolating each entity and its respective
-    style layout inside individual subdirectories.
-  - Utilized **CSS Modules** for strict scope protection and enforced code
-    consistency rules via Prettier formatting.
+### 1. Advanced SEO & Open Graph Meta Tags
+
+- **Global & Dynamic Metadata:** Configured strict `Metadata` object exports for
+  static assets (`layout.tsx` and `not-found.tsx`), alongside asynchronous
+  `generateMetadata` lifecycles for dynamic routing layers.
+- **Open Graph Integration:** Enhanced social media preview metrics by embedding
+  complete `openGraph` schemas, ensuring accurate `title`, `description`,
+  canonical `url` routing alignment, and structured `images` definitions (width,
+  height, alt tags) for maximum shareability.
+
+### 2. Built-in Font Optimization
+
+- **Roboto Font Integration:** Substituted legacy font architectures with the
+  native `next/font/google` compiler optimization layer. Configured custom
+  weights (`400`, `700`), subset limits (`latin`), and instant rendering modes
+  (`display: 'swap'`) applied directly via layout-level semantic hooks.
+
+### 3. Native Form Refactoring
+
+- **Formik & Yup Decoupling:** Replaced heavy Formik structures with sleek,
+  responsive native HTML-5 forms utilizing direct state management (`useState`),
+  significantly reducing client-side package overhead and paving the way for
+  seamless state interpolation.
+- **UX Route Isolation:** Separated post-creation tasks from cramped pop-up
+  overlays into a dedicated semantic sub-route path (`/notes/action/create`).
+
+### 4. Global State & Draft Recovery System with Zustand
+
+- **Automated Client-Side Syncing:** Constructed a centralized store
+  architecture with Zustand to instantly track and back up incremental
+  form-field entries (`onChange`) on the fly.
+- **Persistent Browser Caching:** Layered the core store using Zustand's
+  `persist` middleware, ensuring form draft retention inside `localStorage`
+  across abrupt browser tab cycles or page reloads.
+- **Automated Reset Lifecycles:** Bound form mutations to execute proactive
+  `clearDraft()` triggers inside successful submission threads, while
+  dynamically retaining progressive state changes on explicit "Cancel"
+  navigation triggers.
+
+## 🛠️ Tech Stack Upgrade
+
+- **Framework:** Next.js 15 (App Router)
+- **Global State Management:** Zustand v5
+- **State Middleware:** Zustand Persist (Browser localStorage)
+- **Query Caching:** TanStack Query v5 (React Query)
