@@ -1,6 +1,5 @@
 'use client';
-// import { Formik, Form, Field, ErrorMessage } from 'formik';
-// import * as Yup from 'yup';
+
 import css from './NoteForm.module.css';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createNote } from '@/lib/api';
@@ -9,44 +8,24 @@ import type { NoteTag } from '@/types/note';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-
-// interface NoteFormProps {
-//   onClose: () => void;
-// }
-
-// const initialValues = {
-//   title: '',
-//   content: '',
-//   tag: 'Todo',
-// };
-
-// const validationSchema = Yup.object({
-//   title: Yup.string()
-//     .min(3, 'Title must be at least 3 characters')
-//     .max(50, 'Title must be at most 50 characters')
-//     .required('Title is required'),
-//   content: Yup.string().max(500, 'Content must be at most 500 characters'),
-//   tag: Yup.string()
-//     .oneOf(
-//       ['Todo', 'Work', 'Personal', 'Meeting', 'Shopping'],
-//       'Invalid tag value'
-//     )
-//     .required('Tag is required'),
-// });
+import { useNoteStore } from '@/lib/store/noteStore';
 
 export default function NoteForm() {
   const queryClient = useQueryClient();
   const router = useRouter();
 
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-  const [tag, setTag] = useState<NoteTag>('Todo');
+  const { draft, setDraft, clearDraft } = useNoteStore();
+
+  const [title, setTitle] = useState(draft.title);
+  const [content, setContent] = useState(draft.content);
+  const [tag, setTag] = useState<NoteTag>(draft.tag);
 
   const createMutation = useMutation({
     mutationFn: createNote,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notes'] });
       toast.success('Note created successfully!');
+      clearDraft();
       router.push('/notes/filter/all');
     },
     onError: () => {
@@ -69,7 +48,10 @@ export default function NoteForm() {
           name="title"
           className={css.input}
           value={title}
-          onChange={e => setTitle(e.target.value)}
+          onChange={e => {
+            setTitle(e.target.value);
+            setDraft({ title: e.target.value });
+          }}
           required
         />
       </div>
@@ -82,7 +64,10 @@ export default function NoteForm() {
           rows={8}
           className={css.textarea}
           value={content}
-          onChange={e => setContent(e.target.value)}
+          onChange={e => {
+            setContent(e.target.value);
+            setDraft({ content: e.target.value });
+          }}
         />
       </div>
 
@@ -93,7 +78,10 @@ export default function NoteForm() {
           name="tag"
           className={css.select}
           value={tag}
-          onChange={e => setTag(e.target.value as NoteTag)}
+          onChange={e => {
+            setTag(e.target.value as NoteTag);
+            setDraft({ tag: e.target.value as NoteTag });
+          }}
         >
           <option value="Todo">Todo</option>
           <option value="Work">Work</option>
